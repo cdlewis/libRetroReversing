@@ -40,7 +40,47 @@ void console_log_jump_return(int take_jump, uint32_t jump_target, uint32_t pc, u
 
 extern "C" {
 
- // 
+string get_slot_for_address(int32_t offset) {
+    return "0";
+}
+
+string write_console_asm_header() {
+    string contents = "";
+    return contents;
+}
+
+// The following are only needed for consoles with CDs
+string retro_cd_base_directory = "libRR_RememberToSetCDBase";
+string retro_cd_path = "libRR_RememberToSetCDPATH";
+string retro_cd_base_name = "libRR_RememberToBaseName";
+
+const char* libRR_console = "N64";
+
+struct retro_memory_map libRR_retromap = { 0 };
+
+// Delay slot variables
+uint32_t libRR_delay_slot_pc = 0;
+bool libRR_isDelaySlot = false;
+
+// Bank switching
+uint32_t libRR_bank_size = 0;
+uint16_t libRR_current_bank_slot_0 = 1;
+uint16_t libRR_current_bank_slot_1 = 2;
+uint16_t libRR_current_bank_slot_2 = 3;
+uint32_t libRR_slot_0_max_addr = 0x4000;
+uint32_t libRR_slot_1_max_addr = 0x7fff;
+uint32_t libRR_slot_2_max_addr = 0x7fff;
+bool libRR_bank_switching_available = false;
+
+void libRR_setup_console_details(retro_environment_t environ_cb) {
+    printf("TODO: Setup setting such as libRR_define_console_memory_region for this console\n");
+    // libRR_set_retro_memmap(environ_cb);
+}
+
+// Mupen doesn't have this defined so:
+char retro_base_directory[4096];
+
+// 
 // # Toggles
 // 
 bool support_n64_prints = false;
@@ -1203,5 +1243,16 @@ uint32_t cdl_get_alternative_jump(uint32_t current_jump) {
 
   void libRR_export_all_files() {
     printf("N64: Export All files to Reversing Project, depends on which core we are using");
+  }
+
+  uint32_t libRR_pc_lookahead = 0;
+
+  int get_current_bank_number_for_address(uint32_t addr) {
+    return 0;
+  }
+
+  void add_console_specific_game_json() {
+    // TODO: Add special value to game_json e.g:
+    // game_json["VDP2"]["TVMD"]["DisplayOn"] = VDP2::DisplayOn;
   }
 }
